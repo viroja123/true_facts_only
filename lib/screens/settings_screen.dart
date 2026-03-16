@@ -1,8 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
+
+  Future<void> _openPrivacyPolicy() async {
+    final Uri url = Uri.parse(
+      "https://sites.google.com/view/truefactsonlyprivacypolicy/home",
+    );
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
+  Future<void> _rateApp() async {
+    final Uri url = Uri.parse(
+      "https://play.google.com/store/apps/details?id=com.truefactsonly.app",
+    );
+
+    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+      throw Exception("Could not open Play Store");
+    }
+  }
+
+  void _shareApp() {
+    Share.share(
+      "🧠 Learn something new every day!\n\n"
+      "True Facts Only app brings amazing facts from around the world.\n\n"
+      "Download now:\n"
+      "https://play.google.com/store/apps/details?id=com.truefactsonly.app",
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +68,10 @@ class SettingsScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  child: const Icon(
-                    Icons.lightbulb_outline,
-                    size: 50,
-                    color: Colors.white,
+                  child: Image.asset(
+                    'assets/images/icon.png',
+                    width: 100,
+                    height: 100,
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -67,9 +97,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.star_border,
             title: 'Rate Us',
             onTap: () {
-              ScaffoldMessenger.of(
-                context,
-              ).showSnackBar(const SnackBar(content: Text('Coming soon!')));
+              _rateApp();
             },
           ),
           _buildSettingsTile(
@@ -77,7 +105,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.share_outlined,
             title: 'Share App',
             onTap: () {
-              Share.share('Check out True Facts Only, it\'s amazing!');
+              _shareApp();
             },
           ),
           _buildSettingsTile(
@@ -85,9 +113,7 @@ class SettingsScreen extends StatelessWidget {
             icon: Icons.privacy_tip_outlined,
             title: 'Privacy Policy',
             onTap: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Privacy Policy not set yet.')),
-              );
+              _openPrivacyPolicy();
             },
           ),
         ],
